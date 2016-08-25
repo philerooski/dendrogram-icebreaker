@@ -1,0 +1,9 @@
+httplib2
+oauth2client
+apiclient
+oauth2client
+argparse
+pandas
+geopy
+scipy
+matplotlib
