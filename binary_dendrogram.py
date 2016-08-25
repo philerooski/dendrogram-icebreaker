@@ -21,7 +21,7 @@ def cluster_by_binary(data):
         data[c] = result
     return data
 
-def no_cli_main(group_number):
+def no_cli_main(group_number, filepath='.'):
     gson = pd.read_json("groups.json")
     google_id = gson['groups'][group_number-1]['id']
     data = pd.read_csv(getdocs.get_from_docs(google_id), header=0)
@@ -30,7 +30,7 @@ def no_cli_main(group_number):
     binary_cluster = cluster_by_binary(data.drop('Name', axis=1))
     dendro.plot_dendrogram(binary_cluster, labels=names)
     dendro.plt.tight_layout()
-    dendro.plt.savefig("activity2_group%s.png" % group_number,
+    dendro.plt.savefig("%s/activity2_group%s.png" % (filepath, group_number),
             orientation='landscape', format='png')
 
 def main():

@@ -2,8 +2,8 @@ import os
 import io
 import httplib2
 import oauth2client
-from apiclient.http import MediaIoBaseDownload
-from apiclient import discovery
+from googleapiclient.http import MediaIoBaseDownload
+from googleapiclient import discovery
 from oauth2client import client, tools, file
 import argparse
 parser = argparse.ArgumentParser(parents=[tools.argparser])

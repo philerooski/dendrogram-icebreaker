@@ -3,6 +3,8 @@
 To use:
 
 ```
+import sys
+sys.path.append("dendrogram-icebreaker")
 from main import *
 
 activity_one('13YaIbVBifEURdT3lZkotSGmGEoi5xZGrXbmLydtpAv8', group=6)
