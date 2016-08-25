@@ -1,0 +1,6 @@
+client_secret.json
+groups_test.json
+images/
+*.pyc
+generategroups.py
+activity*
