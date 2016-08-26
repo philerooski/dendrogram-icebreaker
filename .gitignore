@@ -5,3 +5,4 @@ images/
 generategroups.py
 activity*
 autosetup.sh
+vim group_*

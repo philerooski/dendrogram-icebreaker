@@ -2,9 +2,10 @@ from __future__ import division
 from geopy.geocoders import Nominatim
 from scipy.cluster.hierarchy import dendrogram, linkage
 import pandas as pd
-from matplotlib import rcParams
+import matplotlib
 import matplotlib.pyplot as plt
 import getdocs
+matplotlib.style.use('ggplot')
 
 def get_from_localhost(path):
     data = pd.read_csv(path, header=0)
@@ -68,8 +69,10 @@ def plot_dendrogram(df, **kwargs):
     labels = kwargs.get('labels', None)
     ylabel = kwargs.get("ylabel", 'Names')
     orientation = kwargs.get('orientation', 'left')
+    leaf_font_size = kwargs.get('leaf_font_size', None)
     plt.ylabel(ylabel)
-    dendrogram(dendro, orientation=orientation, labels=labels)
+    dendrogram(dendro, orientation=orientation, labels=labels,
+            leaf_font_size=leaf_font_size)
     plt.plot()
 
 def jaccard(n1, n2):
@@ -90,7 +93,7 @@ def clean_data(data, colname):
     return data
 
 def draw_full_plot(df_a, df_b, df_c, group_num):
-    rcParams['lines.linewidth'] = 2
+    matplotlib.rcParams['lines.linewidth'] = 2
     plt.figure(1)
     #ax1 = plt.subplot(311)
     #ax1.set_title("Mystery Plot A (Group %s)" % group_num)
@@ -116,6 +119,7 @@ def draw_full_plot(df_a, df_b, df_c, group_num):
 def no_cli_main(g_id, group_number):
     data = pd.read_csv(getdocs.get_from_docs(g_id), header=0)
     data = clean_data(data, 'Full Name (First Last)')
+    data = data[data['Omit'] == 'No']
     if group_number:
         group_number = int(group_number)
         group_data = data[data['Group Number'] == group_number]
