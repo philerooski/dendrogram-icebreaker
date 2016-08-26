@@ -93,7 +93,7 @@ def clean_data(data, colname):
     return data
 
 def draw_full_plot(df_a, df_b, df_c, group_num):
-    matplotlib.rcParams['lines.linewidth'] = 2
+    matplotlib.rcParams['lines.linewidth'] = 3
     plt.figure(1)
     #ax1 = plt.subplot(311)
     #ax1.set_title("Mystery Plot A (Group %s)" % group_num)

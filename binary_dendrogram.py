@@ -17,10 +17,15 @@ def cluster_by_binary(data):
                 result.append(1)
             elif v == 'n':
                 result.append(0)
+            elif v == 1 or v == 0:
+                result.append(v)
             elif not v in to_binary:
-                to_binary[v] = counter
-                result.append(counter)
-                counter += 1
+                if len(to_binary.keys()) < 2 and not pd.np.isnan(v):
+                    to_binary[v] = counter
+                    result.append(counter)
+                    counter += 1
+                else:
+                    result.append(0.5)
             else:
                 result.append(to_binary[v])
         data[c] = result
@@ -35,10 +40,12 @@ def no_cli_main(group_number, filepath='.'):
     data = dendro.clean_data(data, 'Name')
     names = list(data['Name'])
     binary_cluster = cluster_by_binary(data.drop('Name', axis=1))
+    dendro.matplotlib.rcParams['lines.linewidth'] = 3
     dendro.plot_dendrogram(binary_cluster, labels=names)
     dendro.plt.tight_layout()
     dendro.plt.savefig("%s/activity2_group%s.png" % (filepath, group_number),
             orientation='landscape', format='png')
+    dendro.plt.clf()
 
 def main():
     if getdocs.parser:

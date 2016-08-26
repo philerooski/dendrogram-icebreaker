@@ -1,4 +1,3 @@
-import getdocs
 import dendrogram
 import binary_dendrogram
 import omnigram
