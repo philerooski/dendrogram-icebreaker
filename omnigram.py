@@ -2,9 +2,8 @@ import pandas as pd
 import getdocs
 import binary_dendrogram as bd
 
-BINARY_COLS = ['Researcher: Clinical', 'Researcher: Basic', 'Researcher: Translational', 'Topic: Tumor microenvironment and immune-interactions', 'Topic: Tumor migration and metastasis', 'Topic: Translational', 'Topic: Genomics and gene regulation', 'Topic: Drug resistance and combination therapy', 'Topic: Signaling networks', 'Data: Single cell studies', 'Data: Genomics', 'Data: Imaging', 'Data: Proteomics', 'Data: Therapeutics', 'Personal: Cat vs Dog', 'Personal: Beach vacation vs. Mountain vacation', 'Personal: Superman vs Batman']
+BINARY_COLS = ['Researcher: Clinical [y(es) or n(o)]', 'Researcher: Basic [y(es) or n(o)]', 'Researcher: Translational [y(es) or n(o)]', 'Topic: Tumor microenvironment and immune-interactions [y(es) or n(o)]', 'Topic: Tumor migration and metastasis [y(es) or n(o)]', 'Topic: Genomics and gene regulation [y(es) or n(o)]', 'Topic: Drug resistance and combination therapy [y(es) or n(o)]', 'Topic: Signaling networks [y(es) or n(o)]', 'Data: Single cell studies [y(es) or n(o)]', 'Data: Genomics [y(es) or n(o)]', 'Data: Imaging [y(es) or n(o)]', 'Data: Proteomics [y(es) or n(o)]', 'Data: Therapeutics [y(es) or n(o)]', 'Personal: Cat vs Dog [c(at) or d(og)]', 'Personal: Beach vacation vs. Mountain vacation [b(each) or m(ountain)]', 'Personal: Superman vs Batman [s(uperman) or b(atman)]']
 COLS = ["Name", "GroupNumber"] + BINARY_COLS[:-3]
-PARTICIPANT_SHEET_ID = "13YaIbVBifEURdT3lZkotSGmGEoi5xZGrXbmLydtpAv8"
 
 def agglomerate_groups(groups):
     data = pd.DataFrame()
@@ -30,15 +29,69 @@ def asterisk_poster_names(data):
             data['Name'])
     return data
 
+def draw_metrics(data):
+    research_series = pd.Series([
+        sum(filter(lambda x : x != 0.5, data['Researcher: Clinical [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Researcher: Basic [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Researcher: Translational [y(es) or n(o)]']))
+        ],
+            index=['Clinical', 'Basic', 'Translational'],
+            name='Research')
+    research_series.plot.bar(figsize=(6, 6), colormap='Accent')
+    bd.dendro.plt.title(research_series.name)
+    bd.dendro.plt.axhline(0, color='k')
+    bd.dendro.plt.tight_layout()
+    bd.dendro.plt.savefig("research.png", orientation='landscape',
+            format='png')
+    bd.dendro.plt.clf()
+    topic_series = pd.Series([
+        sum(filter(lambda x : x != 0.5, data['Topic: Tumor microenvironment and immune-interactions [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Topic: Tumor migration and metastasis [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Topic: Genomics and gene regulation [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Topic: Drug resistance and combination therapy [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Topic: Signaling networks [y(es) or n(o)]'])),
+        ],
+            index=['T. microenv. & immune-interactions',
+                'T. migration & metastasis', 'Genomics & gene regulation',
+                'Drug resist. & comb. therapy', 'Signaling networks'],
+            name='Topics')
+    topic_series.plot.bar(figsize=(6, 6), colormap='Paired')
+    bd.dendro.plt.title(topic_series.name)
+    bd.dendro.plt.axhline(0, color='k')
+    bd.dendro.plt.tight_layout()
+    bd.dendro.plt.savefig("topics.png", orientation='landscape', format='png')
+    bd.dendro.plt.clf()
+    data_series = pd.Series([
+        sum(filter(lambda x : x != 0.5, data['Data: Single cell studies [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Data: Genomics [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Data: Imaging [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Data: Proteomics [y(es) or n(o)]'])),
+        sum(filter(lambda x : x != 0.5, data['Data: Therapeutics [y(es) or n(o)]'])),
+        ],
+            index=['Single cell studies', 'Genomics', 'Imaging',
+            'Proteomics', 'Therapeutis'],
+            name='Data')
+    data_series.plot.bar(figsize=(6, 6), colormap='Dark2')
+    bd.dendro.plt.title(data_series.name)
+    bd.dendro.plt.axhline(0, color='k')
+    bd.dendro.plt.tight_layout()
+    bd.dendro.plt.savefig("data.png", orientation='landscape', format='png')
+    bd.dendro.plt.clf()
+
 def main():
     gson = pd.read_json("groups.json")
     data = agglomerate_groups(gson['groups'])
     data = asterisk_poster_names(data)
     binary_cluster = bd.cluster_by_binary(
             data.drop(["Name", "GroupNumber"], axis=1))
+    draw_metrics(binary_cluster)
+    bd.dendro.matplotlib.rcParams['lines.linewidth'] = 0.2
     bd.dendro.plot_dendrogram(binary_cluster, labels=list(data['Name']),
-            orientation='left')
-    bd.dendro.plt.show()
+            orientation='left', leaf_font_size=2)
+    bd.dendro.plt.tight_layout()
+    bd.dendro.plt.savefig("omnigram.png", orientation='landscape',
+            format='png', dpi=400)
+    bd.dendro.plt.clf()
 
 if __name__ == "__main__":
     main()
