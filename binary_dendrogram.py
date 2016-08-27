@@ -20,7 +20,7 @@ def cluster_by_binary(data):
             elif v == 1 or v == 0:
                 result.append(v)
             elif not v in to_binary:
-                if len(to_binary.keys()) < 2 and not pd.np.isnan(v):
+                if len(to_binary.keys()) < 2 and not pd.isnull(v):
                     to_binary[v] = counter
                     result.append(counter)
                     counter += 1
@@ -35,7 +35,7 @@ def cluster_by_binary(data):
 def no_cli_main(group_number, filepath='.'):
     gson = pd.read_json("groups.json")
     group_number = int(group_number)
-    google_id = gson['groups'][group_number-1]['id']
+    google_id = gson['groups'][group_number]['id']
     data = pd.read_csv(getdocs.get_from_docs(google_id), header=0)
     data = dendro.clean_data(data, 'Name')
     names = list(data['Name'])
