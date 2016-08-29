@@ -65,7 +65,7 @@ def cluster_by_jaccard(data):
     return df
 
 def plot_dendrogram(df, **kwargs):
-    dendro = linkage(df)
+    dendro = linkage(df, method='ward')
     labels = kwargs.get('labels', None)
     ylabel = kwargs.get("ylabel", 'Names')
     orientation = kwargs.get('orientation', 'left')

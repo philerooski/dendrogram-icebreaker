@@ -42,7 +42,8 @@ def no_cli_main(group_number, filepath='.'):
     binary_cluster = cluster_by_binary(data.drop('Name', axis=1))
     dendro.matplotlib.rcParams['lines.linewidth'] = 3
     dendro.plot_dendrogram(binary_cluster, labels=names)
-    dendro.plt.xlim(0, 8)
+    dendro.plt.xlim(0, 4)
+    dendro.plt.gca().invert_xaxis()
     dendro.plt.tight_layout()
     dendro.plt.savefig("%s/activity2_group%s.png" % (filepath, group_number),
             orientation='landscape', format='png')
